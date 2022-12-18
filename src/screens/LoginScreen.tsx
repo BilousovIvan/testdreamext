@@ -10,6 +10,7 @@ import {
 import React, {useState} from 'react';
 import {TextStyles} from '../styles/TextStyles';
 import {useSafeAreaFrame} from 'react-native-safe-area-context';
+import ButtonsComponent from '../components/UI/ButtonsComponent';
 
 const LoginScreen = () => {
   // Приветствие
@@ -36,10 +37,11 @@ const LoginScreen = () => {
           secureTextEntry={true}
           onChangeText={value => setPass(value)}
         />
-        <TouchableOpacity style={styles.btn}>
-          <Text style={TextStyles.subHeaderWhite}>Login</Text>
-        </TouchableOpacity>
-        <TextInput />
+        <ButtonsComponent
+          title="Login"
+          onPress={() => console.log('working')}
+          width={120}
+        />
       </View>
     </SafeAreaView>
   );
