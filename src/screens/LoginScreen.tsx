@@ -1,18 +1,44 @@
-import {SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
-import React from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useState} from 'react';
+import {TextStyles} from '../styles/TextStyles';
+import {useSafeAreaFrame} from 'react-native-safe-area-context';
 
 const LoginScreen = () => {
+  // Приветствие
+  const Greetings: string = 'Hello!';
+
+  // Email and Pass
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+
   return (
     <SafeAreaView>
       <View style={styles.formWrapper}>
-        <Text>Login</Text>
-        <TextInput style={styles.input} placeholder="Email" />
+        <Text style={TextStyles.mainHeaderBlack}>{Greetings}</Text>
         <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={value => setEmail(value)}
+        />
+        <TextInput
+          value={pass}
           style={styles.input}
           placeholder="Password"
           secureTextEntry={true}
+          onChangeText={value => setPass(value)}
         />
-
+        <TouchableOpacity style={styles.btn}>
+          <Text style={TextStyles.subHeaderWhite}>Login</Text>
+        </TouchableOpacity>
         <TextInput />
       </View>
     </SafeAreaView>
@@ -37,5 +63,15 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: 1,
     borderRadius: 4,
+  },
+  btn: {
+    width: '50%',
+    height: 48,
+    paddingHorizontal: 12,
+    marginVertical: 6,
+    borderRadius: 4,
+    backgroundColor: 'blue',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
