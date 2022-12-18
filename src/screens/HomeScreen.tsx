@@ -4,6 +4,7 @@ import Post from '../components/Post';
 
 const HomeScreen = () => {
   const [post, setPost] = useState([]);
+
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/posts/')
       .then(response => response.json())
@@ -16,7 +17,7 @@ const HomeScreen = () => {
         <FlatList
           data={post}
           renderItem={Post}
-          keyExtractor={item => item.id}
+          keyExtractor={index => index.id}
         />
       </SafeAreaView>
     </View>

@@ -5,7 +5,7 @@ interface PostProps {
   item: {
     title: string;
     body: string;
-    id: string | number;
+    id: string;
   };
 }
 const Post = ({item}: PostProps) => {
