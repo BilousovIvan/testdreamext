@@ -18,12 +18,12 @@ const HomeScreen = () => {
   const [post, setPost] = useState([]);
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com9/posts')
+    fetch('https://jsonplaceholder.typicode.com/posts')
       .then(response => response.json())
       .then(json => setPost(json))
       .catch(error => {
         Snackbar.show({
-          text: 'Error ',
+          text: 'loading error...',
           duration: Snackbar.LENGTH_LONG,
         });
       });
