@@ -20,7 +20,7 @@ const LoginScreen = () => {
   const Greetings: string = 'Hello!';
 
   // Email and Pass
-  const [email, setEmail] = useState('email@email.com');
+  const [login, setLogin] = useState('email@email.com');
   const [pass, setPass] = useState('12345678');
 
   //status variable for loading indicator
@@ -28,15 +28,15 @@ const LoginScreen = () => {
 
   const navigation = useNavigation();
 
-  const login = () => {
+  const loginHendler = () => {
     checkUsers();
   };
 
   const checkUsers = () => {
-    let curentEmail = USERSDATA.find(users => users.email === email);
-    console.log(curentEmail);
-    if (curentEmail !== undefined) {
-      if (curentEmail.password == pass) {
+    let curentLogin = USERSDATA.find(users => users.login === login);
+    console.log(curentLogin);
+    if (curentLogin !== undefined) {
+      if (curentLogin.password == pass) {
         navigation.navigate('Home');
       } else {
         Alert.alert('Invalid password');
@@ -53,8 +53,8 @@ const LoginScreen = () => {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          value={email}
-          onChangeText={value => setEmail(value)}
+          value={login}
+          onChangeText={value => setLogin(value)}
         />
         <TextInput
           value={pass}
@@ -63,8 +63,8 @@ const LoginScreen = () => {
           secureTextEntry={true}
           onChangeText={value => setPass(value)}
         />
-        {email.length > 4 && pass.length > 6 ? (
-          <ButtonsComponent title="Login" onPress={login} width={120} />
+        {login.length > 4 && pass.length > 6 ? (
+          <ButtonsComponent title="Login" onPress={loginHendler} width={120} />
         ) : (
           <></>
         )}
