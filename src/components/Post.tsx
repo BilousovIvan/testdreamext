@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import ModalWithComments from './UI/ModalWithComments';
 
 interface PostProps {
   item: {
@@ -7,12 +8,18 @@ interface PostProps {
     body: string;
     id: string;
   };
+  onPress: Function;
+  setId: Function;
 }
-const Post = ({item}: PostProps) => {
+const Post = ({item, onPress, setId}: PostProps) => {
+  const pressHendler = () => {
+    console.log('press on post cart');
+    onPress(true);
+    setId(item.id);
+  };
+
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => console.log('Working...')}>
+    <TouchableOpacity style={styles.container} onPress={() => pressHendler()}>
       <Text style={styles.header}>{item.title}</Text>
       <Text style={styles.text}>{item.body}</Text>
     </TouchableOpacity>

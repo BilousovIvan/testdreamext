@@ -5,29 +5,49 @@ import {
   Text,
   View,
   ActivityIndicator,
+  ListRenderItemInfo,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Post from '../components/Post';
 import {useLinkTo} from '@react-navigation/native';
 import ButtonsComponent from '../components/UI/ButtonsComponent';
 import Snackbar from 'react-native-snackbar';
+import ModalWithComments from '../components/UI/ModalWithComments';
 
 const HomeScreen = () => {
   const linkTo = useLinkTo();
 
   const [post, setPost] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(Number);
+  useEffect(() => {
+    fetchPostData();
+  }, []);
 
   useEffect(() => {
+    console.log(modalVisible);
+  }, [modalVisible]);
+
+  const fetchPostData = () => {
+    // TODO Pass request link to env variable
     fetch('https://jsonplaceholder.typicode.com/posts')
       .then(response => response.json())
       .then(json => setPost(json))
       .catch(error => {
         Snackbar.show({
           text: 'loading error...',
-          duration: Snackbar.LENGTH_LONG,
+          duration: Snackbar.LENGTH_INDEFINITE,
+          action: {
+            text: 'Repeat request',
+            textColor: 'green',
+            onPress: () => {
+              fetchPostData();
+            },
+          },
         });
       });
-  }, []);
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView>
@@ -40,11 +60,24 @@ const HomeScreen = () => {
         </View>
 
         {post.length >= 1 ? (
-          <FlatList
-            data={post}
-            renderItem={Post}
-            keyExtractor={index => index.id}
-          />
+          <>
+            <FlatList
+              data={post}
+              renderItem={({item}: ListRenderItemInfo<ItemType>) => (
+                <Post
+                  item={item}
+                  onPress={setModalVisible}
+                  setId={setSelectedPostId}
+                />
+              )}
+              keyExtractor={index => index.id}
+            />
+            {modalVisible ? (
+              <ModalWithComments id={selectedPostId} close={setModalVisible} />
+            ) : (
+              <></>
+            )}
+          </>
         ) : (
           <View style={styles.preloader}>
             <ActivityIndicator size={'large'} />
