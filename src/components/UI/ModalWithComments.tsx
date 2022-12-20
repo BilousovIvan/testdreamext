@@ -68,27 +68,33 @@ const ModalWithComments = ({id, close}: ModalCommentsProps) => {
   };
 
   return (
-    <Modal style={styles.modalWrapper} visible={true}>
-      <View style={styles.headerModal}>
-        <ButtonsComponent
-          title="close"
-          width={70}
-          onPress={() => closeBtnHandler()}
-        />
-      </View>
-      <View>
-        <Text style={TextStyles.mainHeaderBlack}>
-          Post comments with id: {id}
-        </Text>
-      </View>
-      <FlatList
-        data={comments}
-        renderItem={({item}: ListRenderItemInfo<ItemType>) => (
-          <Comments item={item} />
-        )}
-        keyExtractor={index => index.id}
-      />
-    </Modal>
+    <TouchableWithoutFeedback onPress={() => console.log('Клик за пределами')}>
+      <Modal visible={true} transparent={true}>
+        <View style={styles.container}>
+          <View style={styles.modalWrapper}>
+            <View style={styles.headerModal}>
+              <ButtonsComponent
+                title="close"
+                width={70}
+                onPress={() => closeBtnHandler()}
+              />
+            </View>
+            <View>
+              <Text style={TextStyles.mainHeaderBlack}>
+                Post comments with id: {id}
+              </Text>
+            </View>
+            <FlatList
+              data={comments}
+              renderItem={({item}: ListRenderItemInfo<ItemType>) => (
+                <Comments item={item} />
+              )}
+              keyExtractor={index => index.id}
+            />
+          </View>
+        </View>
+      </Modal>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -96,12 +102,14 @@ export default ModalWithComments;
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#000',
+    flex: 1,
+    justifyContent: 'flex-end',
+    zIndex: 999,
   },
   modalWrapper: {
-    height: '100%',
+    height: '50%',
+    padding: 12,
+    backgroundColor: '#fff',
   },
   headerModal: {
     width: '100%',
