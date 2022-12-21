@@ -6,6 +6,11 @@ export const TextStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
+  subHeaderBlack: {
+    color: '#000',
+    fontSize: 14,
+    fontWeight: '700',
+  },
   mainHeaderBlack: {
     color: '#000',
     fontSize: 24,

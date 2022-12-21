@@ -13,6 +13,8 @@ import {useLinkTo} from '@react-navigation/native';
 import ButtonsComponent from '../components/UI/ButtonsComponent';
 import Snackbar from 'react-native-snackbar';
 import ModalWithComments from '../components/UI/ModalWithComments';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
+import {TextStyles} from '../styles/TextStyles';
 
 const HomeScreen = () => {
   const linkTo = useLinkTo();
@@ -20,9 +22,20 @@ const HomeScreen = () => {
   const [post, setPost] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(Number);
+  const [isConnect, setConnection] = useState('');
+
+  const netInfo = useNetInfo();
 
   useEffect(() => {
     fetchPostData();
+    // Subscribe to internet state
+    const internetInfo = NetInfo.addEventListener(state => {
+      setConnection(`Is connected: ${state.isConnected}`);
+      console.log(state.isConnected);
+
+      console.log(isConnect);
+    });
+    internetInfo();
   }, []);
 
   const fetchPostData = () => {
@@ -49,6 +62,14 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <SafeAreaView>
         <View style={styles.header}>
+          {netInfo.isConnected ? (
+            <Text></Text>
+          ) : (
+            <Text style={TextStyles.mainHeaderBlack}>
+              No internet connection
+            </Text>
+          )}
+
           <ButtonsComponent
             title="Log Out"
             onPress={() => linkTo({screen: 'Login'})}
@@ -93,9 +114,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   header: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 24,
     height: '7%',
+    flexDirection: 'row',
   },
   preloader: {
     height: '93%',
