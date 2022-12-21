@@ -20,13 +20,10 @@ const HomeScreen = () => {
   const [post, setPost] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(Number);
+
   useEffect(() => {
     fetchPostData();
   }, []);
-
-  useEffect(() => {
-    console.log(modalVisible);
-  }, [modalVisible]);
 
   const fetchPostData = () => {
     // TODO Pass request link to env variable

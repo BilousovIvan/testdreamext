@@ -10,80 +10,83 @@ import {
   Platform,
   FlatList,
   ListRenderItemInfo,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ButtonsComponent from './ButtonsComponent';
 import {TextStyles} from '../../styles/TextStyles';
 import Comments from '../Comments';
+import Snackbar from 'react-native-snackbar';
 
 interface ModalCommentsProps {
   id: number | string;
   close: Function;
 }
+
+interface CommentsProperties {
+  postId: number | string;
+  id: number | string;
+  name: string;
+  email: string;
+  body: string;
+}
 const ModalWithComments = ({id, close}: ModalCommentsProps) => {
+  const GET_COMMENTS =
+    'https://jsonplaceholder.typicode.com/comments?postId=' + id;
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [comments, setComments] = useState([
-    {
-      postId: 1,
-      id: 1,
-      name: 'id labore ex et quam laborum',
-      email: 'Eliseo@gardner.biz',
-      body: 'laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium',
-    },
-    {
-      postId: 1,
-      id: 2,
-      name: 'quo vero reiciendis velit similique earum',
-      email: 'Jayne_Kuhic@sydney.com',
-      body: 'est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et',
-    },
-    {
-      postId: 1,
-      id: 3,
-      name: 'odio adipisci rerum aut animi',
-      email: 'Nikita@garfield.biz',
-      body: 'quia molestiae reprehenderit quasi aspernatur\naut expedita occaecati aliquam eveniet laudantium\nomnis quibusdam delectus saepe quia accusamus maiores nam est\ncum et ducimus et vero voluptates excepturi deleniti ratione',
-    },
-    {
-      postId: 1,
-      id: 4,
-      name: 'alias odio sit',
-      email: 'Lew@alysha.tv',
-      body: 'non et atque\noccaecati deserunt quas accusantium unde odit nobis qui voluptatem\nquia voluptas consequuntur itaque dolor\net qui rerum deleniti ut occaecati',
-    },
-    {
-      postId: 1,
-      id: 5,
-      name: 'vero eaque aliquid doloribus et culpa',
-      email: 'Hayden@althea.biz',
-      body: 'harum non quasi et ratione\ntempore iure ex voluptates in ratione\nharum architecto fugit inventore cupiditate\nvoluptates magni quo et',
-    },
-  ]);
+  const [comments, setComments] = useState([]);
   console.log(id);
 
   const closeBtnHandler = () => {
     console.log('press close in modal');
     close(false);
   };
+  useEffect(() => {
+    fetchPostData();
+  }, []);
+
+  const fetchPostData = () => {
+    // TODO Pass request link to env variable
+    fetch(GET_COMMENTS)
+      .then(response => response.json())
+      .then(json => setComments(json))
+      .catch(error => {
+        Snackbar.show({
+          text: 'loading error...',
+          duration: Snackbar.LENGTH_INDEFINITE,
+          action: {
+            text: 'Repeat request',
+            textColor: 'green',
+            onPress: () => {
+              fetchPostData();
+            },
+          },
+        });
+      });
+  };
 
   return (
-    <TouchableWithoutFeedback onPress={() => console.log('Клик за пределами')}>
-      <Modal visible={true} transparent={true}>
-        <View style={styles.container}>
-          <View style={styles.modalWrapper}>
-            <View style={styles.headerModal}>
-              <ButtonsComponent
-                title="close"
-                width={70}
-                onPress={() => closeBtnHandler()}
-              />
-            </View>
-            <View>
-              <Text style={TextStyles.mainHeaderBlack}>
-                Post comments with id: {id}
-              </Text>
-            </View>
+    <Modal visible={true} transparent={true}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.close}
+          onPress={() => closeBtnHandler()}></TouchableOpacity>
+        <View style={styles.modalWrapper}>
+          <View style={styles.headerModal}>
+            <ButtonsComponent
+              title="close"
+              width={70}
+              onPress={() => closeBtnHandler()}
+            />
+          </View>
+          <View>
+            <Text style={TextStyles.mainHeaderBlack}>
+              Post comments with id: {id}
+            </Text>
+          </View>
+          {comments.length >= 1 ? (
             <FlatList
               data={comments}
               renderItem={({item}: ListRenderItemInfo<ItemType>) => (
@@ -91,10 +94,14 @@ const ModalWithComments = ({id, close}: ModalCommentsProps) => {
               )}
               keyExtractor={index => index.id}
             />
-          </View>
+          ) : (
+            <View style={styles.preloaderContainer}>
+              <ActivityIndicator size={'large'} />
+            </View>
+          )}
         </View>
-      </Modal>
-    </TouchableWithoutFeedback>
+      </View>
+    </Modal>
   );
 };
 
@@ -115,5 +122,15 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-end',
     paddingHorizontal: 12,
+  },
+  close: {
+    height: '50%',
+  },
+  preloaderContainer: {
+    width: '100%',
+    height: '50%',
+
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

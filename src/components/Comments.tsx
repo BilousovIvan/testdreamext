@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
 interface CommentsProps {
@@ -11,11 +11,13 @@ interface CommentsProps {
 }
 const Comments = ({item}: CommentsProps) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => console.log(item.postID)}>
       <Text>Comments id: {item.id}</Text>
       <Text>Email: {item.email}</Text>
       <Text>Body: {item.body}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
